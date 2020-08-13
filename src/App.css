@@ -1,5 +1,135 @@
+
+#map-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+#controls {
+  position: absolute;
+  z-index: 1;
+  background: teal;
+  color: snow;
+  display: flex;
+  gap: 1rem;
+  padding-left: 1rem;
+}
+#controls > span {
+  margin-left: 1rem;
+}
+#controls > #play-controls {
+
+}
+#live-controls {
+  display: flex;
+  gap: 1rem;
+}
+#live-controls.hide-controls {
+  display: none;
+}
+#time-picker-container {
+  vertical-align: bottom;
+  display: inline-flex;
+}
+#time-picker {
+  width: 3rem;
+  vertical-align: bottom;
+}
+#wind-container{
+  display: flex;
+}
+.wind-icon {
+  display: inline;
+  margin: auto 0 auto 0;
+  cursor: pointer;
+}
+#wind-direction {
+  display: inline-flex;
+}
+.showupto40 {
+  --40stroke-opacity: 1;
+  --50stroke-opacity: 0;
+}
+.showupto50 {
+  --40stroke-opacity: 1;
+  --50stroke-opacity:1;
+}
+.showupto40 .distance-30,
+.showupto40 .distance-50 {
+  fill-opacity: 0;
+}
+.showupto50 .distance-30,
+.showupto50 .distance-40 {
+  fill-opacity: 0;
+}
+.sector {
+  fill-opacity: 0.8;
+}
+svg[data-phase="0"] {
+  fill: rgb(79, 169, 213);
+  fill-opacity: 0.3;
+}
+svg[data-phase="1"] {
+  fill: rgb(245,241,0);
+  fill-opacity: 0.6;
+}
+svg[data-phase="2"] {
+  fill: rgb(47, 255, 0);
+  fill-opacity: 0.9;
+}
+svg[data-phase="3"] {
+  fill: rgb(255, 184, 208);
+  fill-opacity: 0.3;
+}
+.distance {
+  stroke: black;
+  fill-opacity: 0.8;
+}
+.distance.distance-30 {
+  stroke: brown;
+}
+.distance.distance-40 {
+  stroke: cyan;
+  stroke-opacity: var(--40stroke-opacity);
+}
+.distance.distance-50 {
+  stroke: blue;
+  stroke-opacity: var(--50stroke-opacity);
+}
+.sector-50 {
+}
+.label {
+  font: bold 15px sans-serif;
+}
+@keyframes rotating {
+  0% {
+    transform: rotate(-30deg);
+  }
+  50% {
+    transform: rotate(30deg);
+  }
+  100% {
+    transform: rotate(-30deg);
+  }
+}
+#wind-direction-indication{
+  position: absolute;
+  left: 2rem;
+  top: 6rem;
+}
+#wind-direction-indication svg{
+  animation: rotating 3s linear infinite;
+}
+#wind-direction-indication path{
+  fill: #00c2c2;
+}
+#wind-direction-indication.wind-o {
+  transform: rotate(-90deg);
+}
+#wind-direction-indication.wind-w {
+  transform: rotate(90deg);
+}
 .App {
-  text-align: center;
+
 }
 
 .App-logo {
