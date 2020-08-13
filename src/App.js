@@ -139,6 +139,28 @@ function App() {
         <div id="wind-direction-indication" className={currentState.windDirection ? 'wind-w' : 'wind-o'}><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" width="5em" height="5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1538 1535"><path d="M0 768q0-156 61.5-298.5T226 224T471 60.5T769 0t298.5 60.5T1313 224t164 245t61 299t-61 299t-164 244.5t-245.5 163T769 1535t-298.5-61T225 1310T61 1065T0 768zm170 0q0 245 177 422q176 176 422 176q163 0 301.5-80.5t219-218T1370 768q0-121-47.5-232T1194 344.5t-192-128T769 169q-121 0-231.5 47.5t-191 128T218 536t-48 232zm334-259q-5-11 1-16.5t16-.5l238 89q10 4 23 0l235-89q10-5 16 .5t2 16.5l-253 599q-3 10-13 10q-7 0-10-10z" fill="black"/></svg></div>
         <img src="mapimage.jpg" id="map-image" height="900" width="1471" alt="AV NOP Emmeloord"/>
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"
+             width="1471" height="900" className={currentState.viewmode === 0 ? 'live-legend' : 'total-legend'}
+             id="map-svg-legend">
+
+          <svg id="legend-0" x="1330" y="10" data-phase="0">
+            <rect x="0" y="0" width="90" height="20" className="sector" aria-label="CP"/>
+            <text x="10" y="15" className="label" aria-label="CP">-10</text>
+          </svg>
+          <svg id="legend-1" x="1330" y="40" data-phase="1">
+            <rect x="0" y="0" width="90" height="20" className="sector" aria-label="CP"/>
+            <text x="10" y="15" className="label" aria-label="CP">Inwerken</text>
+          </svg>
+          <svg id="legend-2" x="1330" y="70" data-phase="2">
+            <rect x="0" y="0" width="90" height="20" className="sector" aria-label="CP"/>
+            <text x="10" y="15" className="label" aria-label="CP">Onderdeel</text>
+          </svg>
+          <svg id="legend-3" x="1330" y="100" data-phase="3">
+            <rect x="0" y="0" width="90" height="20" className="sector" aria-label="CP"/>
+            <text x="10" y="15" className="label" aria-label="CP">+5</text>
+          </svg>
+
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full"
              width="1471" height="900"
              id="map-svg" onClick={(e) => logCoordinates(e)}>
 

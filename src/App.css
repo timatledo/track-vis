@@ -4,6 +4,18 @@
   left: 0;
   top: 0;
 }
+#map-svg-legend {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+#map-svg-legend text {
+  fill: white;
+  fill-opacity: 95%;
+}
+.total-legend {
+  display: none;
+}
 #controls {
   position: absolute;
   z-index: 1;
