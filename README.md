@@ -1,4 +1,5 @@
 # Track Visualization
+![CI](https://github.com/timschellekens/track-vis/workflows/CI/badge.svg)
 
 Visualization of the track during the Dutch National Combined Events Competition.
 
