@@ -46,7 +46,7 @@ const eventNames = [
     ["800m","400m","200m","800m","T"],
 ];
 const allSectors = ["Ver1","Ver2","Ver3","Ver4","Hoog1","Hoog2","Hoog3","Hoog4","Hoog5","Hoog6","Polshoog1","Polshoog2","Polshoog3","Polshoog4","Kogel1","Kogel2","Discus1","Discus2","Discus3","Discus4","Speer1","Speer2","Speer3","Speer4","CP","Finish1","Finish2","100m","200m","300m","400m"];
-export const phaseColorsRGB = [[154,213,211],[245,241,0],[0,102,0],[241,167,197]];
+export const categoryNames = ['V18','V20','V','M18','M20','M'];
 
 
 const timeschedulesSource = [
@@ -129,11 +129,11 @@ export class TimeSchedule {
         this.hideSectors = allSectors;
     }
 
-    getActiveEvents(currentTime,activeDay,windDirection, beforeMinutes = 10, afterMinutes = 5) {
+    getActiveEvents(currentTime,activeDay,windDirection,categories, beforeMinutes = 10, afterMinutes = 5) {
         const activeSchedules = this.timeschedule[activeDay].reduce((acc, cur) => {
             if (cur.event === "CP") {beforeMinutes = 0; afterMinutes = 0;}
             if (cur.TF === "T") {beforeMinutes = 3; afterMinutes = 3;}
-            if (currentTime >= getAdjustedTime(cur.warmup, -beforeMinutes) && getAdjustedTime(cur.end, afterMinutes) >= currentTime) {
+            if (currentTime >= getAdjustedTime(cur.warmup, -beforeMinutes) && getAdjustedTime(cur.end, afterMinutes) >= currentTime && (categories === [] || categories.indexOf(cur.category) !== -1)) {
                 let currentPhase = 0;
                 if (currentTime >= cur.start) {
                     currentPhase = 2;
@@ -153,19 +153,22 @@ export class TimeSchedule {
         return activeSchedules;
     }
 
-    getAllDaySectors(activeDay,windDirection) {
+    getAllDaySectors(activeDay,windDirection,categories) {
         const activeSchedules = this.timeschedule[activeDay].reduce((acc, cur) => {
-            if (cur.TF === "F") {
-                return {...acc,
-                    [cur.sector[windDirection]]: [
-                        ...(acc?.[cur.sector[windDirection]] || []),
-                        cur.category
-                    ]};
-            }else if (cur.TF === "T") {
-                return {...acc,
-                    [cur.sector[windDirection]]: [
-                        ...((new Set(acc?.[cur.sector[windDirection]] || [])).add(cur.event))
-                    ]};
+            if (!Array.isArray(categories) || !categories.length || categories.indexOf(cur.category) !== -1 || (
+                (categories.includes("M18") || categories.includes("M20")) && cur.category === "M18+20")){
+                if (cur.TF === "F") {
+                    return {...acc,
+                        [cur.sector[windDirection]]: [
+                            ...(acc?.[cur.sector[windDirection]] || []),
+                            cur.category
+                        ]};
+                } else if (cur.TF === "T") {
+                    return {...acc,
+                        [cur.sector[windDirection]]: [
+                            ...((new Set(acc?.[cur.sector[windDirection]] || [])).add(cur.event))
+                        ]};
+                }
             }
             return acc;
         },{});

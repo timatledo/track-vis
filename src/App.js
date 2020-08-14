@@ -1,7 +1,7 @@
 import React, {useState, useEffect,useCallback} from 'react';
 import './App.css';
-import {TimeSchedule,getAdjustedTime} from './Utils/Timeschedule';
-import {Select,MenuItem,ButtonGroup,Button} from '@material-ui/core';
+import {TimeSchedule,getAdjustedTime,categoryNames} from './Utils/Timeschedule';
+import {Select,MenuItem,ButtonGroup,Button,Checkbox,ListItemText} from '@material-ui/core';
 import {PlayArrow,Pause,SkipNext,SkipPrevious,FastForward,FastRewind,Replay} from '@material-ui/icons';
 import DateFnsUtils from '@date-io/date-fns';
 import {MuiPickersUtilsProvider,KeyboardTimePicker} from '@material-ui/pickers';
@@ -15,7 +15,7 @@ function App() {
   };
 
   const timeSchedule = new TimeSchedule();
-  const [currentState,setCurrentState] = useState({activeDay: 0, windDirection: 0, isActive: false, speed: 600, viewmode:1, time: timeSchedule.startEndOfDays[0][0]}); // activeDay: 1 / 2
+  const [currentState,setCurrentState] = useState({activeDay: 0, windDirection: 0, isActive: false, speed: 600, viewmode:1, time: timeSchedule.startEndOfDays[0][0], categories:[]}); // activeDay: 1 / 2
 
   const runSimulation = () => setCurrentState({...currentState, isActive: true});
   const stopSimulation = () => setCurrentState({...currentState, isActive: false});
@@ -29,7 +29,7 @@ function App() {
     let interval = null;
     if (currentState.viewmode === 0) {
       timeSchedule.hideSectors.forEach(event => editSVG({sector: event}, false));
-      timeSchedule.getActiveEvents(currentState.time, currentState.activeDay, currentState.windDirection).forEach(event => editSVG(event, true));
+      timeSchedule.getActiveEvents(currentState.time, currentState.activeDay, currentState.windDirection,currentState.categories).forEach(event => editSVG(event, true));
       if (currentState.isActive && currentState.time < timeSchedule.startEndOfDays[currentState.activeDay][1]) {
         interval = setInterval(() => {
           incrementTime(currentState.speed / 10);
@@ -41,7 +41,7 @@ function App() {
     }
     if (currentState.viewmode === 1) {
       timeSchedule.hideSectors.forEach(event => editSVG({sector: event}, false));
-      Object.entries(timeSchedule.getAllDaySectors(currentState.activeDay, currentState.windDirection)).forEach(([sector,category]) => editSVG({sector,category,phase:2,color:true}, true));
+      Object.entries(timeSchedule.getAllDaySectors(currentState.activeDay, currentState.windDirection,currentState.categories)).forEach(([sector,category]) => editSVG({sector,category,phase:2,color:true}, true));
     }
     return () => clearInterval(interval);
   }, [currentState,incrementTime,timeSchedule]);
@@ -135,6 +135,20 @@ function App() {
               </div>
             </MuiPickersUtilsProvider>
           </div>
+          <Select
+              id="category-selector"
+              multiple
+              value={currentState.categories}
+              onChange={(e) => setCurrentState(prev => {return{...prev, categories: e.target.value}})}
+              renderValue={(selected) => selected.join(', ')}
+          >
+            {categoryNames.map((name) => (
+                <MenuItem key={name} value={name}>
+                  <Checkbox checked={currentState.categories.indexOf(name) > -1} />
+                  <ListItemText primary={name} />
+                </MenuItem>
+            ))}
+          </Select>
         </div>
         <div id="wind-direction-indication" className={currentState.windDirection ? 'wind-w' : 'wind-o'}><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" width="5em" height="5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1538 1535"><path d="M0 768q0-156 61.5-298.5T226 224T471 60.5T769 0t298.5 60.5T1313 224t164 245t61 299t-61 299t-164 244.5t-245.5 163T769 1535t-298.5-61T225 1310T61 1065T0 768zm170 0q0 245 177 422q176 176 422 176q163 0 301.5-80.5t219-218T1370 768q0-121-47.5-232T1194 344.5t-192-128T769 169q-121 0-231.5 47.5t-191 128T218 536t-48 232zm334-259q-5-11 1-16.5t16-.5l238 89q10 4 23 0l235-89q10-5 16 .5t2 16.5l-253 599q-3 10-13 10q-7 0-10-10z" fill="black"/></svg></div>
         <img src="mapimage.jpg" id="map-image" height="900" width="1471" alt="AV NOP Emmeloord"/>
